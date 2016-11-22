@@ -1,4 +1,5 @@
 import TreeNode from './TreeNode';
+import Queue from '../Queue';
 
 function Tree(root) {
   var node = new TreeNode(root);
