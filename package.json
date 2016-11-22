@@ -1,0 +1,11 @@
+{
+  "name": "data-structure-playground",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {
+    "url": "https://github.com/jazlalli/data-structure-playground.git",
+    "type": "git"
+  },
+  "author": "Jaz Lalli <jazlalli@hotmail.com>",
+  "license": "MIT"
+}
