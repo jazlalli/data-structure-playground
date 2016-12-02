@@ -1,5 +1,6 @@
 // NOTHING TO SEE HERE
 // go look inside the folders
+import React from 'react';
 import ReactDOM from 'react-dom';
 
 import Queue from './Queue';
@@ -8,13 +9,28 @@ import Tree from './Tree';
 import menuData from './data.json';
 import Item from './components/Item';
 
-const selectedItems = [];
-const onSelected = (id) => {
-  console.log('>>>', id);
+const selectedItems = new Map();
+
+const onSelected = (id, quantity) => {
+  selectedItems.set(id, quantity);
+}
+
+window.showBasket = function () {
+  selectedItems.forEach((val, key) => {
+    console.log('item:', key, val);
+  });
 }
 
 const displayItems = menuData.items
-  .map(item => (<Item key={item.id} onItemClick={(id) => onSelected(id)} item={item} top />));
+  .map(item => (
+    <Item
+      key={item.id}
+      item={item}
+      leaf={(item.modifier_groups.length === 0)}
+      selectedId={item.id}
+      onSelected={onSelected}
+    />
+  ));
 
 const App = (props) => (
   <div>

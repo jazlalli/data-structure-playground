@@ -4,23 +4,32 @@ import Group from './Group';
 class Item extends Component {
   constructor(props) {
     super(props);
+    this.handleClick = this.handleClick.bind(this);
     this.state = {
-      showGroup: false
+      showGroup: false,
+      quantity: 0,
     };
   }
 
-  handleClick(evt, id) {
+  handleClick = evt => {
     evt.preventDefault();
     evt.stopPropagation();
 
+    const { leaf, onSelected, selectedId } = this.props;
+
     this.setState({
-      showGroup: !this.state.showGroup
-    }, () => this.props.onItemClick(`${id}`));
+      showGroup: !this.state.showGroup,
+      quantity: this.state.quantity + 1,
+    }, () => {
+      if (leaf) {
+        onSelected(selectedId, this.state.quantity);
+      }
+    });
   }
 
   render() {
-    const { showGroup } = this.state;
-    const { item, top } = this.props;
+    const { item, leaf } = this.props;
+    const { showGroup, quantity } = this.state;
 
     let groups = [];
     if (item.modifier_groups.length) {
@@ -28,11 +37,19 @@ class Item extends Component {
     }
 
     const displayGroups = groups
-      .map(group => (<Group key={group.id} group={group} onGroupClick={() => this.props.onItemClick(`${item.id}:${group.id}`)} />));
+      .map(group => (
+        <Group
+          key={group.id}
+          group={group}
+          selectedId={`${this.props.selectedId}:${group.id}`}
+          onSelected={this.props.onSelected}
+        />
+      ));
 
     const style = {
       color: 'green',
       marginLeft: top ? 0 : '20px',
+      textDecoration: (leaf || quantity) ? 'underline' : 'none',
     };
 
     const name = top ? item.name : `> ${item.name}`;
@@ -40,7 +57,7 @@ class Item extends Component {
     return (
       <div
         style={style}
-        onClick={(e) => this.handleClick(e, item.id)}
+        onClick={this.handleClick}
       >
         { name }
         <span>

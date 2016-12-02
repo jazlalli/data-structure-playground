@@ -4,17 +4,19 @@ import Item from './Item';
 export default class Group extends Component {
   constructor(props) {
     super(props);
+    this.handleClick = this.handleClick.bind(this);
     this.state = {
       showItems: false
     };
   }
 
-  handleClick(evt, id) {
+  handleClick = evt => {
     evt.preventDefault();
     evt.stopPropagation();
+
     this.setState({
       showItems: !this.state.showItems
-    }, () => this.props.onGroupClick(`${id}`));
+    });
   }
 
   render() {
@@ -27,15 +29,24 @@ export default class Group extends Component {
     }
 
     const displayItems = items
-      .map(item => (<Item key={item.id} item={item} onItemClick={() => this.props.onGroupClick(`${group.id}:${item.id}`)} />));
+      .map(item => (
+        <Item
+          key={item.id}
+          item={item}
+          leaf={(item.modifier_groups.length === 0)}
+          selectedId={`${this.props.selectedId}:${item.id}`}
+          onSelected={this.props.onSelected}
+        />
+      ));
 
     const style = {
       color: 'palevioletred',
       marginLeft: '20px',
+      textDecoration: showItems ? 'underline' : 'none',
     };
 
     return (
-      <div style={style} onClick={(e) => this.handleClick(e, group)}>
+      <div style={style} onClick={this.handleClick}>
         {group.name}
 
         <span>
